@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>KSpotify — Download Spotify Songs & Playlists</title>
+
+    <meta name="description"
+          content="Free open-source Spotify downloader. Download songs, playlists, and albums from Spotify as high-quality MP3, FLAC, or OGG files.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+
+    <style>
+
+        :root {
+            --surface-0: #0c0c0f;
+            --surface-1: #131318;
+            --surface-2: #1a1a22;
+            --surface-3: #22222e;
+            --surface-4: #2a2a38;
+            --border-1: #2a2a35;
+            --border-2: #35354a;
+            --text-100: #ededf0;
+            --text-200: #b0b0be;
+            --text-300: #6e6e82;
+            --spotify: #1db954;
+            --spotify-dim: rgba(29, 185, 84, 0.12);
+            --spotify-hover: #1ed760;
+            --accent: #1db954;
+            --accent-dim: rgba(29, 185, 84, 0.12);
+            --accent-hover: #1ed760;
+            --purple: #a855f7;
+            --purple-dim: rgba(168, 85, 247, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--surface-0);
+            color: var(--text-100);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+
+        /* ---- TOP BAR ---- */
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 28px;
+            border-bottom: 1px solid var(--border-1);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .brand-mark {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--surface-0);
+            background: var(--spotify);
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+        }
+
+        .brand-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-100);
+            letter-spacing: -0.5px;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .topbar-link {
+            font-size: 13px;
+            color: var(--text-300);
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+
+        .topbar-link:hover {
+            color: var(--text-100);
+        }
+
+        .gh-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-200);
+            padding: 6px 12px;
+            border: 1px solid var(--border-2);
+            border-radius: 6px;
+            text-decoration: none;
+            transition: all 0.15s;
+            font-family: inherit;
+        }
+
+        .gh-btn:hover {
+            color: var(--text-100);
+            border-color: var(--text-300);
+            background: var(--surface-2);
+        }
+
+        .gh-btn svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+        }
+
+
+        /* ---- LAYOUT ---- */
+
+        .layout {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 48px 24px 80px;
+        }
+
+
+        /* ---- HERO ---- */
+
+        .hero {
+            margin-bottom: 48px;
+        }
+
+        .hero-tag {
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--spotify);
+            background: var(--spotify-dim);
+            padding: 4px 10px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            letter-spacing: 0.3px;
+        }
+
+        .hero h1 {
+            font-size: 36px;
+            font-weight: 700;
+            line-height: 1.15;
+            letter-spacing: -1.2px;
+            color: var(--text-100);
+            margin-bottom: 12px;
+        }
+
+        .hero p {
+            font-size: 15px;
+            color: var(--text-300);
+            line-height: 1.6;
+            max-width: 460px;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 24px;
+            margin-top: 24px;
+        }
+
+        .hero-stat {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+        }
+
+        .hero-stat-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 20px;
+            font-weight: 500;
+            color: var(--text-100);
+        }
+
+        .hero-stat-label {
+            font-size: 12px;
+            color: var(--text-300);
+        }
+
+
+        /* ---- SECTION SWITCH ---- */
+
+        .switcher {
+            display: flex;
+            gap: 2px;
+            margin-bottom: 20px;
+        }
+
+        .sw-btn {
+            flex: 1;
+            padding: 11px 0;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-300);
+            background: var(--surface-1);
+            border: 1px solid var(--border-1);
+            cursor: pointer;
+            transition: all 0.15s;
+            position: relative;
+        }
+
+        .sw-btn:first-child {
+            border-radius: 8px 0 0 8px;
+        }
+
+        .sw-btn:last-child {
+            border-radius: 0 8px 8px 0;
+        }
+
+        .sw-btn:hover {
+            color: var(--text-200);
+        }
+
+        .sw-btn.on {
+            background: var(--surface-3);
+            color: var(--text-100);
+            border-color: var(--border-2);
+            z-index: 1;
+        }
+
+        .sw-btn.on::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20%;
+            width: 60%;
+            height: 2px;
+            background: var(--spotify);
+            border-radius: 2px 2px 0 0;
+        }
+
+
+        /* ---- PANELS ---- */
+
+        .panel {
+            display: none;
+        }
+
+        .panel.show {
+            display: block;
+            animation: panelIn 0.25s ease;
+        }
+
+        @keyframes panelIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+
+        /* ---- FORM CARD ---- */
+
+        .fcard {
+            background: var(--surface-1);
+            border: 1px solid var(--border-1);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .fcard-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .fcard-title {
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+
+        .fcard-chip {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: var(--spotify);
+            background: var(--spotify-dim);
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+
+
+        /* ---- INPUTS ---- */
+
+        .field {
+            margin-bottom: 16px;
+        }
+
+        .field-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-300);
+            margin-bottom: 6px;
+            letter-spacing: 0.2px;
+        }
+
+        input[type="url"],
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 14px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: var(--text-100);
+            background: var(--surface-2);
+            border: 1px solid var(--border-1);
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.15s;
+        }
+
+        input[type="url"]::placeholder,
+        input[type="text"]::placeholder {
+            color: var(--text-300);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        input[type="url"]:focus,
+        input[type="text"]:focus {
+            border-color: var(--spotify);
+        }
+
+        .row-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px 12px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-100);
+            background: var(--surface-2);
+            border: 1px solid var(--border-1);
+            border-radius: 8px;
+            outline: none;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236e6e82' d='M3 4.5L6 7.5L9 4.5'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            transition: border-color 0.15s;
+        }
+
+        select:focus {
+            border-color: var(--spotify);
+        }
+
+
+        /* ---- PREVIEW CARD ---- */
+
+        .preview {
+            display: none;
+            background: var(--surface-2);
+            border: 1px solid var(--border-1);
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin-bottom: 16px;
+            animation: panelIn 0.25s ease;
+        }
+
+        .preview.show {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .preview-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--spotify-dim);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .preview-icon svg {
+            width: 20px;
+            height: 20px;
+            fill: var(--spotify);
+        }
+
+        .preview-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .preview-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-100);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .preview-meta {
+            font-size: 11px;
+            color: var(--text-300);
+            margin-top: 2px;
+        }
+
+        .preview-type {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--purple);
+            background: var(--purple-dim);
+            padding: 3px 8px;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+
+        /* ---- BUTTONS ---- */
+
+        .btn {
+            width: 100%;
+            padding: 12px 20px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            letter-spacing: -0.2px;
+            position: relative;
+        }
+
+        .btn-spotify {
+            color: var(--surface-0);
+            background: var(--spotify);
+        }
+
+        .btn-spotify:hover {
+            background: var(--spotify-hover);
+        }
+
+        .btn:active {
+            transform: scale(0.985);
+        }
+
+        .btn.busy {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        .btn.busy .btn-label {
+            visibility: hidden;
+        }
+
+        .btn.busy::after {
+            content: '';
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(0,0,0,0.2);
+            border-top-color: var(--surface-0);
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+
+        /* ---- DETAILS ROW ---- */
+
+        .details {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: var(--border-1);
+            border: 1px solid var(--border-1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 32px;
+        }
+
+        .detail {
+            background: var(--surface-1);
+            padding: 20px 16px;
+            text-align: center;
+        }
+
+        .detail-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--text-100);
+            margin-bottom: 4px;
+        }
+
+        .detail-key {
+            font-size: 11px;
+            color: var(--text-300);
+            letter-spacing: 0.3px;
+        }
+
+
+        /* ---- SUPPORTED ---- */
+
+        .supported {
+            margin-top: 28px;
+            text-align: center;
+        }
+
+        .supported-title {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-300);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .supported-list {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .site-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--text-200);
+            background: var(--surface-2);
+            border: 1px solid var(--border-1);
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: border-color 0.15s;
+        }
+
+        .site-tag:hover {
+            border-color: var(--border-2);
+        }
+
+
+        /* ---- HOW IT WORKS ---- */
+
+        .steps {
+            margin-top: 40px;
+        }
+
+        .steps-title {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-300);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .step {
+            background: var(--surface-1);
+            border: 1px solid var(--border-1);
+            border-radius: 10px;
+            padding: 20px 16px;
+            text-align: center;
+        }
+
+        .step-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 20px;
+            font-weight: 500;
+            color: var(--spotify);
+            margin-bottom: 8px;
+        }
+
+        .step-text {
+            font-size: 12px;
+            color: var(--text-300);
+            line-height: 1.5;
+        }
+
+
+        /* ---- FOOTER ---- */
+
+        .foot {
+            margin-top: 56px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .foot-left {
+            font-size: 12px;
+            color: var(--text-300);
+        }
+
+        .foot-right a {
+            font-size: 12px;
+            color: var(--text-300);
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+
+        .foot-right a:hover {
+            color: var(--spotify);
+        }
+
+
+        /* ---- RESPONSIVE ---- */
+
+        @media (max-width: 580px) {
+
+            .topbar {
+                padding: 12px 16px;
+            }
+
+            .topbar-link {
+                display: none;
+            }
+
+            .layout {
+                padding: 32px 16px 60px;
+            }
+
+            .hero h1 {
+                font-size: 26px;
+            }
+
+            .hero-stats {
+                gap: 16px;
+            }
+
+            .hero-stat-num {
+                font-size: 16px;
+            }
+
+            .row-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .details {
+                grid-template-columns: 1fr;
+            }
+
+            .steps-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .foot {
+                flex-direction: column;
+                gap: 8px;
+                text-align: center;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- TOP BAR -->
+
+    <header class="topbar">
+
+        <a href="/" class="brand">
+            <span class="brand-mark">K</span>
+            <span class="brand-name">kspotify</span>
+        </a>
+
+        <div class="topbar-right">
+
+            <a href="#features" class="topbar-link">Features</a>
+
+            <a href="https://github.com/Karthigamurugadoss/kstream-downloader"
+               class="gh-btn"
+               target="_blank"
+               rel="noopener noreferrer">
+                <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                Star
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <div class="layout">
+
+
+        <!-- HERO -->
+
+        <section class="hero">
+
+            <span class="hero-tag">open source</span>
+
+            <h1>Download Spotify<br>songs & playlists.</h1>
+
+            <p>
+                Paste a Spotify link. Pick your format. Get your music.
+                Songs, playlists, and albums &mdash; in MP3, FLAC, or OGG.
+            </p>
+
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <span class="hero-stat-num">320k</span>
+                    <span class="hero-stat-label">max bitrate</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="hero-stat-num">3</span>
+                    <span class="hero-stat-label">formats</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="hero-stat-num">ZIP</span>
+                    <span class="hero-stat-label">playlists</span>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- SWITCHER -->
+
+        <div class="switcher">
+            <button class="sw-btn on"
+                    onclick="flip('song')"
+                    id="sw-song">
+                Song / Track
+            </button>
+            <button class="sw-btn"
+                    onclick="flip('playlist')"
+                    id="sw-playlist">
+                Playlist / Album
+            </button>
+        </div>
+
+
+        <!-- SONG PANEL -->
+
+        <div class="panel show" id="p-song">
+
+            <div class="fcard">
+
+                <div class="fcard-head">
+                    <span class="fcard-title">Download track</span>
+                    <span class="fcard-chip">single</span>
+                </div>
+
+                <form action="/download"
+                      method="POST"
+                      onsubmit="go(this)">
+
+                    <div class="field">
+                        <label class="field-label">Spotify Track URL</label>
+                        <input type="url"
+                               name="spotify_url"
+                               id="song-url"
+                               placeholder="https://open.spotify.com/track/..."
+                               required
+                               spellcheck="false"
+                               oninput="fetchPreview(this.value, 'song')">
+                    </div>
+
+                    <div class="preview" id="preview-song">
+                        <div class="preview-icon">
+                            <svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+                        </div>
+                        <div class="preview-info">
+                            <div class="preview-name" id="preview-song-name">Loading...</div>
+                            <div class="preview-meta" id="preview-song-artist"></div>
+                        </div>
+                        <span class="preview-type" id="preview-song-type">track</span>
+                    </div>
+
+                    <div class="row-2">
+
+                        <div class="field">
+                            <label class="field-label">Format</label>
+                            <select name="format">
+                                <option value="mp3">MP3</option>
+                                <option value="flac">FLAC</option>
+                                <option value="ogg">OGG</option>
+                            </select>
+                        </div>
+
+                        <div class="field">
+                            <label class="field-label">Quality</label>
+                            <select name="quality">
+                                <option value="320">320 kbps</option>
+                                <option value="192">192 kbps</option>
+                                <option value="128">128 kbps</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <button type="submit" class="btn btn-spotify">
+                        <span class="btn-label">Download Track</span>
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+
+        <!-- PLAYLIST PANEL -->
+
+        <div class="panel" id="p-playlist">
+
+            <div class="fcard">
+
+                <div class="fcard-head">
+                    <span class="fcard-title">Download playlist or album</span>
+                    <span class="fcard-chip">bulk zip</span>
+                </div>
+
+                <form action="/download"
+                      method="POST"
+                      onsubmit="go(this)">
+
+                    <div class="field">
+                        <label class="field-label">Spotify Playlist / Album URL</label>
+                        <input type="url"
+                               name="spotify_url"
+                               id="playlist-url"
+                               placeholder="https://open.spotify.com/playlist/..."
+                               required
+                               spellcheck="false"
+                               oninput="fetchPreview(this.value, 'playlist')">
+                    </div>
+
+                    <div class="preview" id="preview-playlist">
+                        <div class="preview-icon">
+                            <svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+                        </div>
+                        <div class="preview-info">
+                            <div class="preview-name" id="preview-playlist-name">Loading...</div>
+                            <div class="preview-meta" id="preview-playlist-artist"></div>
+                        </div>
+                        <span class="preview-type" id="preview-playlist-type">playlist</span>
+                    </div>
+
+                    <div class="row-2">
+
+                        <div class="field">
+                            <label class="field-label">Format</label>
+                            <select name="format">
+                                <option value="mp3">MP3</option>
+                                <option value="flac">FLAC</option>
+                                <option value="ogg">OGG</option>
+                            </select>
+                        </div>
+
+                        <div class="field">
+                            <label class="field-label">Quality</label>
+                            <select name="quality">
+                                <option value="320">320 kbps</option>
+                                <option value="192">192 kbps</option>
+                                <option value="128">128 kbps</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <button type="submit" class="btn btn-spotify">
+                        <span class="btn-label">Download All</span>
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+
+        <!-- FEATURES -->
+
+        <div class="details" id="features">
+
+            <div class="detail">
+                <div class="detail-value">MP3</div>
+                <div class="detail-key">lossy format</div>
+            </div>
+
+            <div class="detail">
+                <div class="detail-value">FLAC</div>
+                <div class="detail-key">lossless format</div>
+            </div>
+
+            <div class="detail">
+                <div class="detail-value">OGG</div>
+                <div class="detail-key">vorbis format</div>
+            </div>
+
+        </div>
+
+
+        <!-- HOW IT WORKS -->
+
+        <div class="steps">
+
+            <div class="steps-title">How it works</div>
+
+            <div class="steps-grid">
+
+                <div class="step">
+                    <div class="step-num">01</div>
+                    <div class="step-text">Paste a Spotify track, playlist, or album link</div>
+                </div>
+
+                <div class="step">
+                    <div class="step-num">02</div>
+                    <div class="step-text">Choose your preferred audio format and quality</div>
+                </div>
+
+                <div class="step">
+                    <div class="step-num">03</div>
+                    <div class="step-text">Click download and get your files instantly</div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- SUPPORTED -->
+
+        <div class="supported">
+
+            <div class="supported-title">Supports</div>
+
+            <div class="supported-list">
+                <span class="site-tag">tracks</span>
+                <span class="site-tag">playlists</span>
+                <span class="site-tag">albums</span>
+                <span class="site-tag">metadata</span>
+                <span class="site-tag">album art</span>
+                <span class="site-tag">lyrics</span>
+            </div>
+
+        </div>
+
+
+        <!-- FOOTER -->
+
+        <footer class="foot">
+
+            <div class="foot-left">
+                KSpotify &mdash; only download what you have permission to use.
+            </div>
+
+            <div class="foot-right">
+                <a href="https://github.com/Karthigamurugadoss"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    @Karthigamurugadoss
+                </a>
+            </div>
+
+        </footer>
+
+
+    </div>
+
+
+    <script>
+
+        function flip(id) {
+
+            document.querySelectorAll('.sw-btn').forEach(
+                function(b) { b.classList.remove('on'); }
+            );
+
+            document.querySelectorAll('.panel').forEach(
+                function(p) { p.classList.remove('show'); }
+            );
+
+            document.getElementById('sw-' + id).classList.add('on');
+            document.getElementById('p-' + id).classList.add('show');
+        }
+
+        function go(f) {
+            f.querySelector('.btn').classList.add('busy');
+        }
+
+        var previewTimer = null;
+
+        function fetchPreview(url, panel) {
+
+            var previewEl = document.getElementById('preview-' + panel);
+
+            if (!url.match(/https?:\/\/open\.spotify\.com\/(track|playlist|album)\//)) {
+                previewEl.classList.remove('show');
+                return;
+            }
+
+            clearTimeout(previewTimer);
+
+            previewTimer = setTimeout(function() {
+
+                previewEl.classList.add('show');
+                document.getElementById('preview-' + panel + '-name').textContent = 'Loading...';
+                document.getElementById('preview-' + panel + '-artist').textContent = '';
+
+                fetch('/metadata', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url: url })
+                })
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+
+                    if (data.error) {
+                        previewEl.classList.remove('show');
+                        return;
+                    }
+
+                    document.getElementById('preview-' + panel + '-name').textContent = data.name || 'Unknown';
+                    document.getElementById('preview-' + panel + '-artist').textContent = data.artist || '';
+                    document.getElementById('preview-' + panel + '-type').textContent = data.type || 'track';
+                })
+                .catch(function() {
+                    previewEl.classList.remove('show');
+                });
+
+            }, 500);
+        }
+
+    </script>
+
+
+</body>
+
+</html>

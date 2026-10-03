@@ -157,15 +157,52 @@ Open your browser and go to **http://127.0.0.1:5000**
 
 ---
 
+## KSpotify — Spotify Downloader
+
+This repo also includes **KSpotify**, a Spotify song and playlist downloader with the same design language.
+
+### Features
+
+- Download individual **tracks** from Spotify
+- Download entire **playlists** and **albums** as a ZIP archive
+- Multiple audio formats: **MP3**, **FLAC**, **OGG**
+- Quality options: **320 kbps**, **192 kbps**, **128 kbps**
+- Live link preview with track metadata
+- Automatic album art and metadata embedding
+
+### Run KSpotify
+
+```bash
+cd spotify
+pip install -r ../requirements.txt
+python app.py
+```
+
+Open your browser and go to **http://127.0.0.1:5100**
+
+### How It Works
+
+1. Paste a Spotify track, playlist, or album URL
+2. Choose your preferred audio format and quality
+3. Click **Download** — single tracks download directly, playlists arrive as a ZIP
+
+> KSpotify uses [spotdl](https://github.com/spotDL/spotify-downloader) under the hood, which finds matching audio on YouTube and downloads it with proper Spotify metadata.
+
+---
+
 ## Project Structure
 
 ```
 kstream-downloader/
-├── app.py              # Flask backend — routes, download logic
+├── app.py              # Flask backend — video/audio/transcript routes
 ├── templates/
-│   └── index.html      # Frontend UI
+│   └── index.html      # KStream frontend UI
+├── spotify/
+│   ├── app.py          # Flask backend — Spotify download routes
+│   └── templates/
+│       └── index.html  # KSpotify frontend UI
 ├── screenshots/        # App screenshots
-├── requirements.txt    # Python dependencies
+├── requirements.txt    # Python dependencies (Flask, yt-dlp, spotdl)
 ├── downloads/          # Temporary download directory (auto-created)
 ├── LICENSE
 └── README.md
