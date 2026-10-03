@@ -8,9 +8,39 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title>K Downloader</title>
+    <title>KStream - Smart Media Downloader</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
+
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #111827;
+            --bg-card: rgba(17, 24, 39, 0.7);
+            --bg-card-hover: rgba(17, 24, 39, 0.85);
+            --bg-input: #1e2536;
+            --bg-input-focus: #242d42;
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --border-input: rgba(255, 255, 255, 0.1);
+            --border-input-focus: rgba(99, 102, 241, 0.5);
+            --accent-primary: #6366f1;
+            --accent-primary-hover: #818cf8;
+            --accent-secondary: #06b6d4;
+            --accent-green: #10b981;
+            --accent-green-hover: #34d399;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.4);
+            --shadow-glow: 0 0 40px rgba(99, 102, 241, 0.15);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+        }
 
         * {
             box-sizing: border-box;
@@ -19,413 +49,774 @@
         }
 
         body {
-
-            font-family:
-                Arial,
-                Helvetica,
-                sans-serif;
-
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             min-height: 100vh;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
 
-            background:
-                linear-gradient(
-                    135deg,
-                    #07111f,
-                    #102a43,
-                    #174a6e
-                );
 
+        /* ANIMATED BACKGROUND */
+
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bg-gradient::before {
+            content: '';
+            position: absolute;
+            top: -40%;
+            left: -20%;
+            width: 80%;
+            height: 80%;
+            background: radial-gradient(
+                ellipse,
+                rgba(99, 102, 241, 0.12) 0%,
+                transparent 70%
+            );
+            animation: float1 20s ease-in-out infinite;
+        }
+
+        .bg-gradient::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            right: -20%;
+            width: 70%;
+            height: 70%;
+            background: radial-gradient(
+                ellipse,
+                rgba(6, 182, 212, 0.08) 0%,
+                transparent 70%
+            );
+            animation: float2 25s ease-in-out infinite;
+        }
+
+        @keyframes float1 {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(5%, 8%); }
+        }
+
+        @keyframes float2 {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-5%, -6%); }
+        }
+
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 60px 60px;
+        }
+
+
+        /* LAYOUT */
+
+        .page-wrapper {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 880px;
+            margin: 0 auto;
+            padding: 0 24px;
+            width: 100%;
+        }
+
+
+        /* NAV */
+
+        .nav {
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border-subtle);
+            backdrop-filter: blur(20px);
+            background: rgba(10, 14, 26, 0.6);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .nav-logo {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 16px;
             color: white;
+        }
 
-            padding: 30px;
+        .nav-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.3px;
+        }
+
+        .nav-badge {
+            font-size: 11px;
+            font-weight: 500;
+            padding: 3px 8px;
+            border-radius: 20px;
+            background: rgba(99, 102, 241, 0.15);
+            color: var(--accent-primary-hover);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-link {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-link-gh {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-link-gh svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
         }
 
 
-        /* HEADER */
+        /* HERO */
 
-        .header {
-
+        .hero {
+            padding: 60px 0 40px;
             text-align: center;
-
-            margin-bottom: 35px;
         }
 
-        .logo {
-
-            font-size: 42px;
-
-            font-weight: bold;
-
-            letter-spacing: 2px;
-
-            margin-bottom: 8px;
+        .hero-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--accent-primary-hover);
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            padding: 6px 16px;
+            border-radius: 20px;
+            margin-bottom: 20px;
         }
 
-        .subtitle {
+        .hero-eyebrow-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent-green);
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
 
-            color: #b9c9d8;
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
 
+        .hero-title {
+            font-size: 44px;
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            line-height: 1.1;
+            margin-bottom: 14px;
+        }
+
+        .hero-title-gradient {
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-secondary) 50%, var(--accent-primary-hover) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 16px;
+            color: var(--text-secondary);
+            font-weight: 400;
+            line-height: 1.6;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+
+        /* MAIN CONTENT */
+
+        .main {
+            flex: 1;
+            padding-bottom: 60px;
+        }
+
+
+        /* TABS */
+
+        .tabs {
+            display: flex;
+            gap: 4px;
+            background: var(--bg-input);
+            border-radius: var(--radius-md);
+            padding: 4px;
+            margin-bottom: 24px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 10px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            background: transparent;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: inherit;
+        }
+
+        .tab:hover {
+            color: var(--text-primary);
+        }
+
+        .tab.active {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .tab-icon {
             font-size: 16px;
         }
 
+        .tab-panel {
+            display: none;
+        }
 
-        /* MAIN */
+        .tab-panel.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
 
-        .main {
-
-            max-width: 1000px;
-
-            margin: auto;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
 
         /* CARD */
 
         .card {
-
-            background:
-                rgba(
-                    255,
-                    255,
-                    255,
-                    0.09
-                );
-
-            backdrop-filter:
-                blur(15px);
-
-            border:
-                1px solid
-                rgba(
-                    255,
-                    255,
-                    255,
-                    0.15
-                );
-
-            border-radius: 20px;
-
-            padding: 30px;
-
-            margin-bottom: 25px;
-
-            box-shadow:
-                0 20px 50px
-                rgba(
-                    0,
-                    0,
-                    0,
-                    0.25
-                );
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            padding: 28px;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s;
         }
 
+        .card:hover {
+            border-color: rgba(255, 255, 255, 0.1);
+            box-shadow: var(--shadow-lg), var(--shadow-glow);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 22px;
+        }
 
         .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
 
-            font-size: 22px;
-
-            margin-bottom: 20px;
+        .card-badge {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent-green);
+            border: 1px solid rgba(16, 185, 129, 0.2);
         }
 
 
-        /* TEXTAREA */
+        /* FORM ELEMENTS */
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            letter-spacing: 0.2px;
+        }
 
         textarea {
-
             width: 100%;
-
-            height: 130px;
-
+            height: 120px;
             resize: vertical;
-
-            padding: 15px;
-
-            border-radius: 12px;
-
-            border: none;
-
+            padding: 14px 16px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-input);
             outline: none;
-
-            font-size: 15px;
-
-            background: #f5f7fa;
-
-            color: #222;
-
-            margin-bottom: 20px;
-        }
-
-
-        /* OPTIONS */
-
-        .options {
-
-            display: grid;
-
-            grid-template-columns:
-                repeat(
-                    3,
-                    1fr
-                );
-
-            gap: 15px;
-
-            margin-bottom: 20px;
-        }
-
-
-        .option-box {
-
-            background:
-                rgba(
-                    255,
-                    255,
-                    255,
-                    0.08
-                );
-
-            padding: 15px;
-
-            border-radius: 12px;
-        }
-
-
-        .option-box label {
-
-            display: block;
-
             font-size: 14px;
-
-            color: #c7d5e0;
-
-            margin-bottom: 8px;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-input);
+            color: var(--text-primary);
+            transition: all 0.2s;
+            line-height: 1.5;
         }
 
+        textarea::placeholder {
+            color: var(--text-muted);
+        }
+
+        textarea:focus {
+            border-color: var(--border-input-focus);
+            background: var(--bg-input-focus);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 22px;
+        }
+
+        .select-wrapper {
+            position: relative;
+        }
+
+        .select-wrapper::after {
+            content: '';
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 5px solid var(--text-muted);
+            pointer-events: none;
+        }
 
         select {
-
             width: 100%;
-
-            padding: 12px;
-
-            border-radius: 8px;
-
-            border: none;
-
+            padding: 12px 36px 12px 14px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-input);
             outline: none;
-
-            background: white;
-
-            color: #222;
-
+            background: var(--bg-input);
+            color: var(--text-primary);
             font-size: 14px;
-        }
-
-
-        /* BUTTON */
-
-        .download-button {
-
-            width: 100%;
-
-            border: none;
-
-            padding: 15px;
-
-            border-radius: 10px;
-
-            background:
-                linear-gradient(
-                    90deg,
-                    #00c6ff,
-                    #0072ff
-                );
-
-            color: white;
-
-            font-size: 16px;
-
-            font-weight: bold;
-
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
             cursor: pointer;
-
-            transition: 0.2s;
+            appearance: none;
+            -webkit-appearance: none;
+            transition: all 0.2s;
         }
 
-
-        .download-button:hover {
-
-            transform:
-                translateY(-2px);
-
-            box-shadow:
-                0 8px 20px
-                rgba(
-                    0,
-                    114,
-                    255,
-                    0.4
-                );
+        select:focus {
+            border-color: var(--border-input-focus);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
         }
 
-
-        /* TRANSCRIPT */
-
-        .transcript-grid {
-
-            display: grid;
-
-            grid-template-columns:
-                2fr 1fr;
-
-            gap: 15px;
-        }
-
-
-        input {
-
+        input[type="url"] {
             width: 100%;
-
-            padding: 14px;
-
-            border-radius: 8px;
-
-            border: none;
-
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-input);
             outline: none;
-
             font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-input);
+            color: var(--text-primary);
+            transition: all 0.2s;
+        }
+
+        input[type="url"]::placeholder {
+            color: var(--text-muted);
+        }
+
+        input[type="url"]:focus {
+            border-color: var(--border-input-focus);
+            background: var(--bg-input-focus);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
         }
 
 
-        .transcript-button {
+        /* BUTTONS */
 
+        .btn {
             width: 100%;
-
-            padding: 14px;
-
             border: none;
-
-            border-radius: 8px;
-
-            background:
-                #00b894;
-
-            color: white;
-
-            font-weight: bold;
-
+            padding: 14px 24px;
+            border-radius: var(--radius-md);
+            font-size: 15px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
             cursor: pointer;
+            transition: all 0.25s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            letter-spacing: -0.2px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.1),
+                transparent
+            );
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-primary), #4f46e5);
+            color: white;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 25px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-green {
+            background: linear-gradient(135deg, var(--accent-green), #059669);
+            color: white;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-green:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 25px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-green:active {
+            transform: translateY(0);
+        }
+
+        .btn-icon {
+            font-size: 18px;
         }
 
 
-        .transcript-button:hover {
+        /* TRANSCRIPT LAYOUT */
 
-            background:
-                #009b7c;
-        }
-
-
-        /* INFO */
-
-        .info {
-
+        .transcript-row {
             display: grid;
-
-            grid-template-columns:
-                repeat(
-                    3,
-                    1fr
-                );
-
-            gap: 15px;
-
-            margin-top: 20px;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 18px;
         }
 
 
-        .info-item {
+        /* FEATURES */
 
+        .features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-top: 32px;
+        }
+
+        .feature {
             text-align: center;
+            padding: 22px 16px;
+            border-radius: var(--radius-lg);
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            transition: all 0.3s;
+        }
 
-            padding: 15px;
+        .feature:hover {
+            border-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
 
-            border-radius: 12px;
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin: 0 auto 12px;
+        }
 
-            background:
-                rgba(
-                    255,
-                    255,
-                    255,
-                    0.06
-                );
+        .feature-icon-purple {
+            background: rgba(99, 102, 241, 0.12);
+        }
+
+        .feature-icon-cyan {
+            background: rgba(6, 182, 212, 0.12);
+        }
+
+        .feature-icon-green {
+            background: rgba(16, 185, 129, 0.12);
+        }
+
+        .feature-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            letter-spacing: -0.2px;
+        }
+
+        .feature-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.4;
         }
 
 
-        .info-item strong {
+        /* SUPPORTED PLATFORMS */
 
-            display: block;
-
-            margin-bottom: 5px;
+        .platforms {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 28px;
+            flex-wrap: wrap;
         }
 
+        .platforms-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
 
-        .info-item span {
-
-            color: #b9c9d8;
-
-            font-size: 13px;
+        .platform-tag {
+            font-size: 11px;
+            font-weight: 500;
+            padding: 4px 10px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-subtle);
         }
 
 
         /* FOOTER */
 
-        footer {
+        .footer {
+            padding: 24px 0;
+            border-top: 1px solid var(--border-subtle);
+        }
 
-            text-align: center;
+        .footer .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
 
-            color: #8fa5b8;
+        .footer-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
+        .footer-logo {
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 9px;
+            color: white;
+        }
+
+        .footer-text {
             font-size: 13px;
+            color: var(--text-muted);
+        }
 
-            margin-top: 25px;
+        .footer-right {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .footer-right a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-right a:hover {
+            color: var(--accent-primary-hover);
+        }
+
+
+        /* LOADING STATE */
+
+        .btn.loading {
+            pointer-events: none;
+            opacity: 0.85;
+        }
+
+        .btn.loading .btn-text {
+            visibility: hidden;
+        }
+
+        .btn.loading .btn-icon {
+            visibility: hidden;
+        }
+
+        .btn.loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
 
         /* RESPONSIVE */
 
-        @media (
-            max-width: 700px
-        ) {
+        @media (max-width: 640px) {
 
-            body {
-
-                padding: 15px;
+            .hero {
+                padding: 40px 0 30px;
             }
 
-            .options {
-
-                grid-template-columns:
-                    1fr;
+            .hero-title {
+                font-size: 30px;
             }
 
-            .transcript-grid {
-
-                grid-template-columns:
-                    1fr;
+            .hero-subtitle {
+                font-size: 14px;
             }
 
-            .info {
-
-                grid-template-columns:
-                    1fr;
+            .card {
+                padding: 20px;
             }
 
-            .logo {
-
-                font-size: 32px;
+            .options-grid {
+                grid-template-columns: 1fr;
             }
 
+            .transcript-row {
+                grid-template-columns: 1fr;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .footer .container {
+                flex-direction: column;
+                gap: 8px;
+                text-align: center;
+            }
+
+            .platforms {
+                justify-content: center;
+            }
         }
 
     </style>
@@ -435,281 +826,297 @@
 
 <body>
 
+    <div class="bg-gradient"></div>
+    <div class="grid-overlay"></div>
 
-    <div class="main">
+
+    <div class="page-wrapper">
 
 
-        <!-- HEADER -->
+        <!-- NAV -->
 
-        <div class="header">
+        <nav class="nav">
 
-            <div class="logo">
-                K Downloader
+            <div class="container">
+
+                <a href="/" class="nav-brand">
+
+                    <div class="nav-logo">K</div>
+
+                    <span class="nav-title">KStream</span>
+
+                    <span class="nav-badge">v2.0</span>
+
+                </a>
+
+                <div class="nav-links">
+
+                    <a href="https://github.com/Karthigamurugadoss/video_downloader"
+                       class="nav-link nav-link-gh"
+                       target="_blank"
+                       rel="noopener noreferrer">
+
+                        <svg viewBox="0 0 16 16">
+                            <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+                        </svg>
+                        GitHub
+                    </a>
+
+                </div>
+
             </div>
 
-            <div class="subtitle">
-                Fast and simple video, audio and transcript downloader
+        </nav>
+
+
+        <!-- HERO -->
+
+        <div class="hero">
+
+            <div class="container">
+
+                <div class="hero-eyebrow">
+                    <span class="hero-eyebrow-dot"></span>
+                    Open Source &middot; Free Forever
+                </div>
+
+                <h1 class="hero-title">
+                    <span class="hero-title-gradient">Smart Media Downloader</span>
+                </h1>
+
+                <p class="hero-subtitle">
+                    Download videos, extract audio, and grab transcripts from your
+                    favorite platforms. Fast, simple, no limits.
+                </p>
+
             </div>
 
         </div>
 
 
-        <!-- DOWNLOAD CARD -->
+        <!-- MAIN -->
 
-        <div class="card">
+        <div class="main">
 
-            <div class="card-title">
-                Download Video / Audio
-            </div>
+            <div class="container">
 
 
-            <form
-                action="/download"
-                method="POST"
-            >
+                <!-- TABS -->
 
+                <div class="tabs">
 
-                <textarea
-                    name="video_urls"
-                    placeholder="Paste one URL or multiple URLs here...
+                    <button class="tab active"
+                            onclick="switchTab('download')"
+                            id="tab-download">
+                        <span class="tab-icon">&#9655;</span>
+                        Video / Audio
+                    </button>
 
-Example:
-https://example.com/video1
-https://example.com/video2
-https://example.com/video3"
-                    required
-                ></textarea>
-
-
-                <div class="options">
-
-
-                    <!-- MODE -->
-
-                    <div class="option-box">
-
-                        <label>
-                            Download Type
-                        </label>
-
-                        <select
-                            name="mode"
-                            id="mode"
-                            onchange="changeQuality()"
-                        >
-
-                            <option value="video">
-                                🎬 Video
-                            </option>
-
-                            <option value="audio">
-                                🎵 Audio
-                            </option>
-
-                        </select>
-
-                    </div>
-
-
-                    <!-- QUALITY -->
-
-                    <div class="option-box">
-
-                        <label>
-                            Quality
-                        </label>
-
-                        <select
-                            name="quality"
-                            id="quality"
-                        >
-
-                            <option value="best">
-                                Best Available
-                            </option>
-
-                            <option value="1080">
-                                1080p
-                            </option>
-
-                            <option value="720">
-                                720p
-                            </option>
-
-                            <option value="480">
-                                480p
-                            </option>
-
-                            <option value="360">
-                                360p
-                            </option>
-
-                        </select>
-
-                    </div>
-
-
-                    <!-- BULK INFO -->
-
-                    <div class="option-box">
-
-                        <label>
-                            Download Mode
-                        </label>
-
-                        <select disabled>
-
-                            <option>
-                                Single / Bulk
-                            </option>
-
-                        </select>
-
-                    </div>
-
+                    <button class="tab"
+                            onclick="switchTab('transcript')"
+                            id="tab-transcript">
+                        <span class="tab-icon">&#9998;</span>
+                        Transcript
+                    </button>
 
                 </div>
 
 
-                <button
-                    type="submit"
-                    class="download-button"
-                >
+                <!-- DOWNLOAD PANEL -->
 
-                    ⬇ Download Now
+                <div class="tab-panel active" id="panel-download">
 
-                </button>
+                    <div class="card">
 
+                        <div class="card-header">
 
-            </form>
+                            <h2 class="card-title">Download Media</h2>
 
-        </div>
+                            <span class="card-badge">Bulk Ready</span>
 
+                        </div>
 
-        <!-- TRANSCRIPT CARD -->
+                        <form action="/download"
+                              method="POST"
+                              onsubmit="handleSubmit(this)">
 
-        <div class="card">
+                            <div class="form-group">
 
-            <div class="card-title">
-                📝 Transcript Downloader
-            </div>
+                                <label class="form-label">
+                                    Paste URLs (one per line for bulk download)
+                                </label>
 
+                                <textarea
+                                    name="video_urls"
+                                    placeholder="https://youtube.com/watch?v=..."
+                                    required
+                                ></textarea>
 
-            <form
-                action="/transcript"
-                method="POST"
-            >
+                            </div>
 
+                            <div class="options-grid">
 
-                <div class="transcript-grid">
+                                <div>
+                                    <label class="form-label">Format</label>
+                                    <div class="select-wrapper">
+                                        <select name="mode"
+                                                id="mode"
+                                                onchange="changeQuality()">
+                                            <option value="video">Video (MP4)</option>
+                                            <option value="audio">Audio (MP3)</option>
+                                        </select>
+                                    </div>
+                                </div>
 
+                                <div>
+                                    <label class="form-label">Quality</label>
+                                    <div class="select-wrapper">
+                                        <select name="quality" id="quality">
+                                            <option value="best">Best Available</option>
+                                            <option value="1080">1080p</option>
+                                            <option value="720">720p</option>
+                                            <option value="480">480p</option>
+                                            <option value="360">360p</option>
+                                        </select>
+                                    </div>
+                                </div>
 
-                    <input
-                        type="url"
-                        name="transcript_url"
-                        placeholder="Paste video URL"
-                        required
-                    >
+                            </div>
 
+                            <button type="submit" class="btn btn-primary">
+                                <span class="btn-icon">&#8615;</span>
+                                <span class="btn-text">Download Now</span>
+                            </button>
 
-                    <select
-                        name="language"
-                    >
+                        </form>
 
-                        <option value="en">
-                            English
-                        </option>
-
-                        <option value="ta">
-                            Tamil
-                        </option>
-
-                        <option value="hi">
-                            Hindi
-                        </option>
-
-                        <option value="te">
-                            Telugu
-                        </option>
-
-                        <option value="ml">
-                            Malayalam
-                        </option>
-
-                    </select>
-
+                    </div>
 
                 </div>
 
 
-                <br>
+                <!-- TRANSCRIPT PANEL -->
+
+                <div class="tab-panel" id="panel-transcript">
+
+                    <div class="card">
+
+                        <div class="card-header">
+
+                            <h2 class="card-title">Download Transcript</h2>
+
+                            <span class="card-badge">VTT Format</span>
+
+                        </div>
+
+                        <form action="/transcript"
+                              method="POST"
+                              onsubmit="handleSubmit(this)">
+
+                            <div class="transcript-row">
+
+                                <div>
+                                    <label class="form-label">Video URL</label>
+                                    <input type="url"
+                                           name="transcript_url"
+                                           placeholder="https://youtube.com/watch?v=..."
+                                           required>
+                                </div>
+
+                                <div>
+                                    <label class="form-label">Language</label>
+                                    <div class="select-wrapper">
+                                        <select name="language">
+                                            <option value="en">English</option>
+                                            <option value="ta">Tamil</option>
+                                            <option value="hi">Hindi</option>
+                                            <option value="te">Telugu</option>
+                                            <option value="ml">Malayalam</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <button type="submit" class="btn btn-green">
+                                <span class="btn-icon">&#9998;</span>
+                                <span class="btn-text">Get Transcript</span>
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </div>
 
 
-                <button
-                    type="submit"
-                    class="transcript-button"
-                >
+                <!-- FEATURES -->
 
-                    📝 Download Transcript
+                <div class="features">
 
-                </button>
+                    <div class="feature">
+                        <div class="feature-icon feature-icon-purple">&#9889;</div>
+                        <div class="feature-title">Parallel Downloads</div>
+                        <div class="feature-desc">8 concurrent fragments for maximum speed</div>
+                    </div>
+
+                    <div class="feature">
+                        <div class="feature-icon feature-icon-cyan">&#128230;</div>
+                        <div class="feature-title">Bulk Export</div>
+                        <div class="feature-desc">Multiple URLs delivered as a single ZIP</div>
+                    </div>
+
+                    <div class="feature">
+                        <div class="feature-icon feature-icon-green">&#127925;</div>
+                        <div class="feature-title">Audio Extract</div>
+                        <div class="feature-desc">Extract audio in MP3 up to 320kbps</div>
+                    </div>
+
+                </div>
 
 
-            </form>
+                <!-- PLATFORMS -->
+
+                <div class="platforms">
+
+                    <span class="platforms-label">Works with</span>
+                    <span class="platform-tag">YouTube</span>
+                    <span class="platform-tag">Instagram</span>
+                    <span class="platform-tag">Twitter / X</span>
+                    <span class="platform-tag">Facebook</span>
+                    <span class="platform-tag">1000+ sites</span>
+
+                </div>
+
+
+            </div>
 
         </div>
 
 
-        <!-- FEATURES -->
+        <!-- FOOTER -->
 
-        <div class="info">
+        <footer class="footer">
 
+            <div class="container">
 
-            <div class="info-item">
+                <div class="footer-left">
+                    <div class="footer-logo">K</div>
+                    <span class="footer-text">
+                        KStream &mdash; Download content you have permission to use
+                    </span>
+                </div>
 
-                <strong>
-                    ⚡ Faster Downloads
-                </strong>
-
-                <span>
-                    Parallel fragments where supported
-                </span>
-
-            </div>
-
-
-            <div class="info-item">
-
-                <strong>
-                    📦 Bulk Download
-                </strong>
-
-                <span>
-                    Download multiple URLs as one ZIP
-                </span>
+                <div class="footer-right">
+                    Built by
+                    <a href="https://github.com/Karthigamurugadoss"
+                       target="_blank"
+                       rel="noopener noreferrer">
+                        Karthigamurugadoss
+                    </a>
+                </div>
 
             </div>
-
-
-            <div class="info-item">
-
-                <strong>
-                    🎵 Audio Mode
-                </strong>
-
-                <span>
-                    Extract audio as MP3
-                </span>
-
-            </div>
-
-
-        </div>
-
-
-        <footer>
-
-            K Downloader • Download content you have permission to download
 
         </footer>
 
@@ -719,75 +1126,53 @@ https://example.com/video3"
 
     <script>
 
+        function switchTab(tab) {
+
+            document.querySelectorAll('.tab').forEach(
+                function(t) { t.classList.remove('active'); }
+            );
+
+            document.querySelectorAll('.tab-panel').forEach(
+                function(p) { p.classList.remove('active'); }
+            );
+
+            document.getElementById('tab-' + tab).classList.add('active');
+            document.getElementById('panel-' + tab).classList.add('active');
+        }
+
 
         function changeQuality() {
 
-            const mode =
-                document.getElementById(
-                    "mode"
-                ).value;
+            var mode = document.getElementById('mode').value;
+            var quality = document.getElementById('quality');
 
-            const quality =
-                document.getElementById(
-                    "quality"
-                );
+            quality.innerHTML = '';
 
+            if (mode === 'video') {
 
-            quality.innerHTML = "";
+                quality.innerHTML =
+                    '<option value="best">Best Available</option>' +
+                    '<option value="1080">1080p</option>' +
+                    '<option value="720">720p</option>' +
+                    '<option value="480">480p</option>' +
+                    '<option value="360">360p</option>';
 
+            } else {
 
-            if (
-                mode === "video"
-            ) {
-
-                quality.innerHTML = `
-
-                    <option value="best">
-                        Best Available
-                    </option>
-
-                    <option value="1080">
-                        1080p
-                    </option>
-
-                    <option value="720">
-                        720p
-                    </option>
-
-                    <option value="480">
-                        480p
-                    </option>
-
-                    <option value="360">
-                        360p
-                    </option>
-
-                `;
+                quality.innerHTML =
+                    '<option value="320">320 kbps</option>' +
+                    '<option value="192">192 kbps</option>' +
+                    '<option value="128">128 kbps</option>';
 
             }
-
-            else {
-
-                quality.innerHTML = `
-
-                    <option value="320">
-                        320 kbps
-                    </option>
-
-                    <option value="192">
-                        192 kbps
-                    </option>
-
-                    <option value="128">
-                        128 kbps
-                    </option>
-
-                `;
-
-            }
-
         }
 
+
+        function handleSubmit(form) {
+
+            var btn = form.querySelector('.btn');
+            btn.classList.add('loading');
+        }
 
     </script>
 
