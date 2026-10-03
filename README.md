@@ -1,11 +1,29 @@
-# KStream — Smart Media Downloader
+<p align="center">
+  <img src="screenshots/banner.png" alt="KStream — Smart Media Downloader" width="100%">
+</p>
 
-**Open-source video downloader, audio extractor, and transcript downloader built with Python Flask and yt-dlp.**
+<p align="center">
+  <strong>Open-source video downloader, audio extractor, and transcript downloader.</strong><br>
+  Built with Python Flask and yt-dlp. Self-hosted. No limits.
+</p>
 
-[![Python](https://img.shields.io/badge/Python-3.8%2B-3776AB?logo=python&logoColor=white)](https://python.org)
-[![Flask](https://img.shields.io/badge/Flask-Web_Framework-000000?logo=flask&logoColor=white)](https://flask.palletsprojects.com)
-[![yt-dlp](https://img.shields.io/badge/yt--dlp-Media_Engine-FF0000?logo=youtube&logoColor=white)](https://github.com/yt-dlp/yt-dlp)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+<p align="center">
+  <a href="https://python.org"><img src="https://img.shields.io/badge/Python-3.8%2B-3776AB?logo=python&logoColor=white" alt="Python"></a>
+  <a href="https://flask.palletsprojects.com"><img src="https://img.shields.io/badge/Flask-Web_Framework-000000?logo=flask&logoColor=white" alt="Flask"></a>
+  <a href="https://github.com/yt-dlp/yt-dlp"><img src="https://img.shields.io/badge/yt--dlp-Media_Engine-FF0000?logo=youtube&logoColor=white" alt="yt-dlp"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License"></a>
+  <a href="https://github.com/Karthigamurugadoss/kstream-downloader/stargazers"><img src="https://img.shields.io/github/stars/Karthigamurugadoss/kstream-downloader?style=social" alt="Stars"></a>
+</p>
+
+<p align="center">
+  <a href="#features">Features</a> &nbsp;&middot;&nbsp;
+  <a href="#getting-started">Getting Started</a> &nbsp;&middot;&nbsp;
+  <a href="#usage">Usage</a> &nbsp;&middot;&nbsp;
+  <a href="#supported-platforms">Platforms</a> &nbsp;&middot;&nbsp;
+  <a href="#contributing">Contributing</a>
+</p>
+
+---
 
 KStream is a modern, self-hosted web application that lets you download videos, extract audio as MP3, bulk download multiple URLs as a ZIP archive, and grab video transcripts — all from a clean, responsive browser interface. Powered by [yt-dlp](https://github.com/yt-dlp/yt-dlp), it supports **YouTube, Instagram, Twitter/X, Facebook, and 1000+ websites**.
 
@@ -15,23 +33,17 @@ KStream is a modern, self-hosted web application that lets you download videos, 
 
 ## Screenshots
 
-### Video / Audio Download
+| Video / Audio Download | Transcript Download |
+|:---:|:---:|
+| ![Video Download](screenshots/kstream-hero.png) | ![Transcript](screenshots/kstream-transcript.png) |
 
-<p align="center">
-  <img src="screenshots/kstream-hero.png" alt="KStream - Video and Audio Download" width="800">
-</p>
-
-### Transcript Download
-
-<p align="center">
-  <img src="screenshots/kstream-transcript.png" alt="KStream - Transcript Download" width="800">
-</p>
-
-### Mobile Responsive
-
+<details>
+<summary><strong>Mobile View</strong></summary>
+<br>
 <p align="center">
   <img src="screenshots/kstream-mobile.png" alt="KStream - Mobile View" width="300">
 </p>
+</details>
 
 ---
 
@@ -197,11 +209,13 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ## Author
 
-**Karthigamurugadoss** — [GitHub](https://github.com/Karthigamurugadoss)
+Built by **[Karthigamurugadoss](https://github.com/Karthigamurugadoss)**
 
 ---
 
 <p align="center">
-  <strong>If you find KStream useful, give it a star!</strong><br>
-  <a href="https://github.com/Karthigamurugadoss/kstream-downloader">⭐ Star on GitHub</a>
+  <br>
+  <a href="https://github.com/Karthigamurugadoss/kstream-downloader/stargazers"><img src="https://img.shields.io/github/stars/Karthigamurugadoss/kstream-downloader?style=for-the-badge&logo=github&label=Star%20this%20repo&color=e8a03e" alt="Star"></a>
+  <br><br>
+  <sub>If KStream saved you time, a star helps others find it too.</sub>
 </p>
