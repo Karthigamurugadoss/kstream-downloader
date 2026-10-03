@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Video Downloader</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(
+                135deg,
+                #1d2671,
+                #c33764
+            );
+        }
+
+        .container {
+            width: 450px;
+            padding: 40px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            color: #222;
+        }
+
+        p {
+            margin-bottom: 25px;
+            color: #666;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 15px;
+            margin-bottom: 15px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #c33764;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            background: #c33764;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #a52d55;
+        }
+
+        .note {
+            margin-top: 20px;
+            font-size: 13px;
+            color: #888;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Video Downloader</h1>
+
+        <p>Enter the video URL below</p>
+
+        <form action="/download" method="POST">
+
+            <input
+                type="url"
+                name="video_url"
+                placeholder="Paste video URL here"
+                required
+            >
+
+            <button type="submit">
+                Download Video
+            </button>
+
+        </form>
+
+        <div class="note">
+            Download only videos that you are permitted to download.
+        </div>
+
+    </div>
+
+</body>
+
+</html>
