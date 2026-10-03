@@ -13,6 +13,28 @@ KStream is a modern, self-hosted web application that lets you download videos, 
 
 ---
 
+## Screenshots
+
+### Video / Audio Download
+
+<p align="center">
+  <img src="screenshots/kstream-hero.png" alt="KStream - Video and Audio Download" width="800">
+</p>
+
+### Transcript Download
+
+<p align="center">
+  <img src="screenshots/kstream-transcript.png" alt="KStream - Transcript Download" width="800">
+</p>
+
+### Mobile Responsive
+
+<p align="center">
+  <img src="screenshots/kstream-mobile.png" alt="KStream - Mobile View" width="300">
+</p>
+
+---
+
 ## Features
 
 ### Video Download
@@ -97,39 +119,41 @@ Open your browser and go to **http://127.0.0.1:5000**
 1. Open KStream in your browser
 2. Paste a video URL into the text area
 3. Select **Video (MP4)** and your preferred quality
-4. Click **Download Now**
+4. Click **Download**
 
 ### Extract Audio
 
 1. Paste a video URL
 2. Switch format to **Audio (MP3)**
 3. Choose bitrate (128 / 192 / 320 kbps)
-4. Click **Download Now**
+4. Click **Download**
 
 ### Bulk Download
 
 1. Paste multiple URLs, one per line
 2. Select format and quality
-3. Click **Download Now** — all files arrive as a single ZIP
+3. Click **Download** — all files arrive as a single ZIP
 
 ### Get a Transcript
 
 1. Switch to the **Transcript** tab
 2. Paste the video URL
 3. Select the language
-4. Click **Get Transcript** — downloads as a VTT file
+4. Click **Get transcript** — downloads as a VTT file
 
 ---
 
 ## Project Structure
 
 ```
-video_downloader/
+kstream-downloader/
 ├── app.py              # Flask backend — routes, download logic
 ├── templates/
 │   └── index.html      # Frontend UI
+├── screenshots/        # App screenshots
 ├── requirements.txt    # Python dependencies
 ├── downloads/          # Temporary download directory (auto-created)
+├── LICENSE
 └── README.md
 ```
 
@@ -179,5 +203,5 @@ This project is open source and available under the [MIT License](LICENSE).
 
 <p align="center">
   <strong>If you find KStream useful, give it a star!</strong><br>
-  <a href="https://github.com/Karthigamurugadoss/video_downloader">⭐ Star on GitHub</a>
+  <a href="https://github.com/Karthigamurugadoss/kstream-downloader">⭐ Star on GitHub</a>
 </p>
