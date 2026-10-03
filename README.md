@@ -13,9 +13,11 @@
   <a href="https://github.com/yt-dlp/yt-dlp"><img src="https://img.shields.io/badge/yt--dlp-Media_Engine-FF0000?logo=youtube&logoColor=white" alt="yt-dlp"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License"></a>
   <a href="https://github.com/Karthigamurugadoss/kstream-downloader/stargazers"><img src="https://img.shields.io/github/stars/Karthigamurugadoss/kstream-downloader?style=social" alt="Stars"></a>
+  <a href="https://karthigamurugadoss.github.io/kstream-downloader/"><img src="https://img.shields.io/badge/Website-Live_Demo-e8a03e?logo=googlechrome&logoColor=white" alt="Website"></a>
 </p>
 
 <p align="center">
+  <a href="https://karthigamurugadoss.github.io/kstream-downloader/">Website</a> &nbsp;&middot;&nbsp;
   <a href="#features">Features</a> &nbsp;&middot;&nbsp;
   <a href="#getting-started">Getting Started</a> &nbsp;&middot;&nbsp;
   <a href="#usage">Usage</a> &nbsp;&middot;&nbsp;
