@@ -76,8 +76,8 @@ Download video transcripts and subtitles in VTT format:
 
 ```bash
 # Clone the repository
-git clone https://github.com/Karthigamurugadoss/video_downloader.git
-cd video_downloader
+git clone https://github.com/Karthigamurugadoss/kstream-downloader.git
+cd kstream-downloader
 
 # Install dependencies
 pip install -r requirements.txt

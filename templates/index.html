@@ -8,38 +8,34 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title>KStream - Smart Media Downloader</title>
+    <title>KStream — Download Video, Audio & Transcripts</title>
+
+    <meta name="description"
+          content="Free open-source media downloader. Download videos, extract audio as MP3, and grab transcripts from YouTube, Instagram, Twitter and 1000+ sites.">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
 
     <style>
 
         :root {
-            --bg-primary: #0a0e1a;
-            --bg-secondary: #111827;
-            --bg-card: rgba(17, 24, 39, 0.7);
-            --bg-card-hover: rgba(17, 24, 39, 0.85);
-            --bg-input: #1e2536;
-            --bg-input-focus: #242d42;
-            --border-subtle: rgba(255, 255, 255, 0.06);
-            --border-input: rgba(255, 255, 255, 0.1);
-            --border-input-focus: rgba(99, 102, 241, 0.5);
-            --accent-primary: #6366f1;
-            --accent-primary-hover: #818cf8;
-            --accent-secondary: #06b6d4;
-            --accent-green: #10b981;
-            --accent-green-hover: #34d399;
-            --text-primary: #f1f5f9;
-            --text-secondary: #94a3b8;
-            --text-muted: #64748b;
-            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.4);
-            --shadow-glow: 0 0 40px rgba(99, 102, 241, 0.15);
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 16px;
-            --radius-xl: 20px;
+            --surface-0: #0c0c0f;
+            --surface-1: #131318;
+            --surface-2: #1a1a22;
+            --surface-3: #22222e;
+            --surface-4: #2a2a38;
+            --border-1: #2a2a35;
+            --border-2: #35354a;
+            --text-100: #ededf0;
+            --text-200: #b0b0be;
+            --text-300: #6e6e82;
+            --accent: #e8a03e;
+            --accent-dim: rgba(232, 160, 62, 0.12);
+            --accent-hover: #f0b05a;
+            --green: #3ecf8e;
+            --green-dim: rgba(62, 207, 142, 0.12);
+            --green-hover: #5ad9a2;
         }
 
         * {
@@ -48,719 +44,430 @@
             padding: 0;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--surface-0);
+            color: var(--text-100);
             min-height: 100vh;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
 
-        /* ANIMATED BACKGROUND */
+        /* ---- TOP BAR ---- */
 
-        .bg-gradient {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            overflow: hidden;
-        }
-
-        .bg-gradient::before {
-            content: '';
-            position: absolute;
-            top: -40%;
-            left: -20%;
-            width: 80%;
-            height: 80%;
-            background: radial-gradient(
-                ellipse,
-                rgba(99, 102, 241, 0.12) 0%,
-                transparent 70%
-            );
-            animation: float1 20s ease-in-out infinite;
-        }
-
-        .bg-gradient::after {
-            content: '';
-            position: absolute;
-            bottom: -30%;
-            right: -20%;
-            width: 70%;
-            height: 70%;
-            background: radial-gradient(
-                ellipse,
-                rgba(6, 182, 212, 0.08) 0%,
-                transparent 70%
-            );
-            animation: float2 25s ease-in-out infinite;
-        }
-
-        @keyframes float1 {
-            0%, 100% { transform: translate(0, 0); }
-            50% { transform: translate(5%, 8%); }
-        }
-
-        @keyframes float2 {
-            0%, 100% { transform: translate(0, 0); }
-            50% { transform: translate(-5%, -6%); }
-        }
-
-        .grid-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            background-image:
-                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-            background-size: 60px 60px;
-        }
-
-
-        /* LAYOUT */
-
-        .page-wrapper {
-            position: relative;
-            z-index: 1;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .container {
-            max-width: 880px;
-            margin: 0 auto;
-            padding: 0 24px;
-            width: 100%;
-        }
-
-
-        /* NAV */
-
-        .nav {
-            padding: 20px 0;
-            border-bottom: 1px solid var(--border-subtle);
-            backdrop-filter: blur(20px);
-            background: rgba(10, 14, 26, 0.6);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .nav .container {
+        .topbar {
             display: flex;
             align-items: center;
             justify-content: space-between;
+            padding: 16px 28px;
+            border-bottom: 1px solid var(--border-1);
         }
 
-        .nav-brand {
+        .brand {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             text-decoration: none;
         }
 
-        .nav-logo {
-            width: 36px;
-            height: 36px;
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            border-radius: var(--radius-sm);
+        .brand-mark {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--surface-0);
+            background: var(--accent);
+            width: 30px;
+            height: 30px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 800;
-            font-size: 16px;
-            color: white;
+            border-radius: 6px;
         }
 
-        .nav-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--text-primary);
-            letter-spacing: -0.3px;
-        }
-
-        .nav-badge {
-            font-size: 11px;
+        .brand-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 15px;
             font-weight: 500;
-            padding: 3px 8px;
-            border-radius: 20px;
-            background: rgba(99, 102, 241, 0.15);
-            color: var(--accent-primary-hover);
-            border: 1px solid rgba(99, 102, 241, 0.2);
+            color: var(--text-100);
+            letter-spacing: -0.5px;
         }
 
-        .nav-links {
+        .topbar-right {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 16px;
         }
 
-        .nav-link {
+        .topbar-link {
             font-size: 13px;
-            font-weight: 500;
-            color: var(--text-secondary);
+            color: var(--text-300);
             text-decoration: none;
-            padding: 6px 12px;
-            border-radius: var(--radius-sm);
-            transition: all 0.2s;
+            transition: color 0.15s;
         }
 
-        .nav-link:hover {
-            color: var(--text-primary);
-            background: rgba(255, 255, 255, 0.05);
+        .topbar-link:hover {
+            color: var(--text-100);
         }
 
-        .nav-link-gh {
-            display: flex;
+        .gh-btn {
+            display: inline-flex;
             align-items: center;
             gap: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-200);
+            padding: 6px 12px;
+            border: 1px solid var(--border-2);
+            border-radius: 6px;
+            text-decoration: none;
+            transition: all 0.15s;
+            font-family: inherit;
         }
 
-        .nav-link-gh svg {
-            width: 16px;
-            height: 16px;
+        .gh-btn:hover {
+            color: var(--text-100);
+            border-color: var(--text-300);
+            background: var(--surface-2);
+        }
+
+        .gh-btn svg {
+            width: 14px;
+            height: 14px;
             fill: currentColor;
         }
 
 
-        /* HERO */
+        /* ---- LAYOUT ---- */
 
-        .hero {
-            padding: 60px 0 40px;
-            text-align: center;
+        .layout {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 48px 24px 80px;
         }
 
-        .hero-eyebrow {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
+
+        /* ---- HERO ---- */
+
+        .hero {
+            margin-bottom: 48px;
+        }
+
+        .hero-tag {
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
             font-weight: 500;
-            color: var(--accent-primary-hover);
-            background: rgba(99, 102, 241, 0.1);
-            border: 1px solid rgba(99, 102, 241, 0.2);
-            padding: 6px 16px;
-            border-radius: 20px;
+            color: var(--accent);
+            background: var(--accent-dim);
+            padding: 4px 10px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            letter-spacing: 0.3px;
+        }
+
+        .hero h1 {
+            font-size: 36px;
+            font-weight: 700;
+            line-height: 1.15;
+            letter-spacing: -1.2px;
+            color: var(--text-100);
+            margin-bottom: 12px;
+        }
+
+        .hero p {
+            font-size: 15px;
+            color: var(--text-300);
+            line-height: 1.6;
+            max-width: 460px;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 24px;
+            margin-top: 24px;
+        }
+
+        .hero-stat {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+        }
+
+        .hero-stat-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 20px;
+            font-weight: 500;
+            color: var(--text-100);
+        }
+
+        .hero-stat-label {
+            font-size: 12px;
+            color: var(--text-300);
+        }
+
+
+        /* ---- SECTION SWITCH ---- */
+
+        .switcher {
+            display: flex;
+            gap: 2px;
             margin-bottom: 20px;
         }
 
-        .hero-eyebrow-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--accent-green);
-            animation: pulse-dot 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse-dot {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.4; }
-        }
-
-        .hero-title {
-            font-size: 44px;
-            font-weight: 800;
-            letter-spacing: -1.5px;
-            line-height: 1.1;
-            margin-bottom: 14px;
-        }
-
-        .hero-title-gradient {
-            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-secondary) 50%, var(--accent-primary-hover) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero-subtitle {
-            font-size: 16px;
-            color: var(--text-secondary);
-            font-weight: 400;
-            line-height: 1.6;
-            max-width: 500px;
-            margin: 0 auto;
-        }
-
-
-        /* MAIN CONTENT */
-
-        .main {
+        .sw-btn {
             flex: 1;
-            padding-bottom: 60px;
-        }
-
-
-        /* TABS */
-
-        .tabs {
-            display: flex;
-            gap: 4px;
-            background: var(--bg-input);
-            border-radius: var(--radius-md);
-            padding: 4px;
-            margin-bottom: 24px;
-        }
-
-        .tab {
-            flex: 1;
-            padding: 10px 16px;
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--text-secondary);
-            background: transparent;
-            border: none;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+            padding: 11px 0;
             font-family: inherit;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-300);
+            background: var(--surface-1);
+            border: 1px solid var(--border-1);
+            cursor: pointer;
+            transition: all 0.15s;
+            position: relative;
         }
 
-        .tab:hover {
-            color: var(--text-primary);
+        .sw-btn:first-child {
+            border-radius: 8px 0 0 8px;
         }
 
-        .tab.active {
-            background: var(--bg-card-hover);
-            color: var(--text-primary);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        .sw-btn:last-child {
+            border-radius: 0 8px 8px 0;
         }
 
-        .tab-icon {
-            font-size: 16px;
+        .sw-btn:hover {
+            color: var(--text-200);
         }
 
-        .tab-panel {
+        .sw-btn.on {
+            background: var(--surface-3);
+            color: var(--text-100);
+            border-color: var(--border-2);
+            z-index: 1;
+        }
+
+        .sw-btn.on::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20%;
+            width: 60%;
+            height: 2px;
+            background: var(--accent);
+            border-radius: 2px 2px 0 0;
+        }
+
+
+        /* ---- PANELS ---- */
+
+        .panel {
             display: none;
         }
 
-        .tab-panel.active {
+        .panel.show {
             display: block;
-            animation: fadeIn 0.3s ease;
+            animation: panelIn 0.25s ease;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(6px); }
+        @keyframes panelIn {
+            from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
 
-        /* CARD */
+        /* ---- FORM CARD ---- */
 
-        .card {
-            background: var(--bg-card);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-xl);
-            padding: 28px;
-            box-shadow: var(--shadow-lg);
-            transition: all 0.3s;
+        .fcard {
+            background: var(--surface-1);
+            border: 1px solid var(--border-1);
+            border-radius: 12px;
+            padding: 24px;
         }
 
-        .card:hover {
-            border-color: rgba(255, 255, 255, 0.1);
-            box-shadow: var(--shadow-lg), var(--shadow-glow);
-        }
-
-        .card-header {
+        .fcard-head {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 22px;
+            margin-bottom: 20px;
         }
 
-        .card-title {
-            font-size: 18px;
+        .fcard-title {
+            font-size: 15px;
             font-weight: 600;
             letter-spacing: -0.3px;
         }
 
-        .card-badge {
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            padding: 4px 10px;
-            border-radius: 6px;
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--accent-green);
-            border: 1px solid rgba(16, 185, 129, 0.2);
-        }
-
-
-        /* FORM ELEMENTS */
-
-        .form-group {
-            margin-bottom: 18px;
-        }
-
-        .form-label {
-            display: block;
-            font-size: 13px;
+        .fcard-chip {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
             font-weight: 500;
-            color: var(--text-secondary);
-            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: var(--green);
+            background: var(--green-dim);
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+
+
+        /* ---- INPUTS ---- */
+
+        .field {
+            margin-bottom: 16px;
+        }
+
+        .field-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-300);
+            margin-bottom: 6px;
             letter-spacing: 0.2px;
         }
 
         textarea {
             width: 100%;
-            height: 120px;
-            resize: vertical;
-            padding: 14px 16px;
-            border-radius: var(--radius-md);
-            border: 1px solid var(--border-input);
+            height: 100px;
+            padding: 12px 14px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--text-100);
+            background: var(--surface-2);
+            border: 1px solid var(--border-1);
+            border-radius: 8px;
             outline: none;
-            font-size: 14px;
-            font-family: 'Inter', sans-serif;
-            background: var(--bg-input);
-            color: var(--text-primary);
-            transition: all 0.2s;
-            line-height: 1.5;
+            resize: vertical;
+            transition: border-color 0.15s;
         }
 
         textarea::placeholder {
-            color: var(--text-muted);
+            color: var(--text-300);
+            font-family: 'JetBrains Mono', monospace;
         }
 
         textarea:focus {
-            border-color: var(--border-input-focus);
-            background: var(--bg-input-focus);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+            border-color: var(--accent);
         }
 
-        .options-grid {
+        .row-2 {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
-            margin-bottom: 22px;
-        }
-
-        .select-wrapper {
-            position: relative;
-        }
-
-        .select-wrapper::after {
-            content: '';
-            position: absolute;
-            right: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 0;
-            height: 0;
-            border-left: 5px solid transparent;
-            border-right: 5px solid transparent;
-            border-top: 5px solid var(--text-muted);
-            pointer-events: none;
         }
 
         select {
             width: 100%;
-            padding: 12px 36px 12px 14px;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border-input);
-            outline: none;
-            background: var(--bg-input);
-            color: var(--text-primary);
-            font-size: 14px;
-            font-family: 'Inter', sans-serif;
+            padding: 10px 12px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 13px;
             font-weight: 500;
+            color: var(--text-100);
+            background: var(--surface-2);
+            border: 1px solid var(--border-1);
+            border-radius: 8px;
+            outline: none;
             cursor: pointer;
             appearance: none;
             -webkit-appearance: none;
-            transition: all 0.2s;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236e6e82' d='M3 4.5L6 7.5L9 4.5'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            transition: border-color 0.15s;
         }
 
         select:focus {
-            border-color: var(--border-input-focus);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+            border-color: var(--accent);
         }
 
         input[type="url"] {
             width: 100%;
-            padding: 12px 14px;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border-input);
+            padding: 10px 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: var(--text-100);
+            background: var(--surface-2);
+            border: 1px solid var(--border-1);
+            border-radius: 8px;
             outline: none;
-            font-size: 14px;
-            font-family: 'Inter', sans-serif;
-            background: var(--bg-input);
-            color: var(--text-primary);
-            transition: all 0.2s;
+            transition: border-color 0.15s;
         }
 
         input[type="url"]::placeholder {
-            color: var(--text-muted);
+            color: var(--text-300);
+            font-family: 'JetBrains Mono', monospace;
         }
 
         input[type="url"]:focus {
-            border-color: var(--border-input-focus);
-            background: var(--bg-input-focus);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+            border-color: var(--accent);
         }
 
 
-        /* BUTTONS */
+        /* ---- BUTTONS ---- */
 
         .btn {
             width: 100%;
-            border: none;
-            padding: 14px 24px;
-            border-radius: var(--radius-md);
-            font-size: 15px;
-            font-weight: 600;
-            font-family: 'Inter', sans-serif;
-            cursor: pointer;
-            transition: all 0.25s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            letter-spacing: -0.2px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                90deg,
-                transparent,
-                rgba(255, 255, 255, 0.1),
-                transparent
-            );
-            transition: left 0.5s;
-        }
-
-        .btn:hover::before {
-            left: 100%;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--accent-primary), #4f46e5);
-            color: white;
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 6px 25px rgba(99, 102, 241, 0.4);
-        }
-
-        .btn-primary:active {
-            transform: translateY(0);
-        }
-
-        .btn-green {
-            background: linear-gradient(135deg, var(--accent-green), #059669);
-            color: white;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-        }
-
-        .btn-green:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 6px 25px rgba(16, 185, 129, 0.4);
-        }
-
-        .btn-green:active {
-            transform: translateY(0);
-        }
-
-        .btn-icon {
-            font-size: 18px;
-        }
-
-
-        /* TRANSCRIPT LAYOUT */
-
-        .transcript-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 18px;
-        }
-
-
-        /* FEATURES */
-
-        .features {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 14px;
-            margin-top: 32px;
-        }
-
-        .feature {
-            text-align: center;
-            padding: 22px 16px;
-            border-radius: var(--radius-lg);
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            transition: all 0.3s;
-        }
-
-        .feature:hover {
-            border-color: rgba(255, 255, 255, 0.1);
-            transform: translateY(-2px);
-        }
-
-        .feature-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: var(--radius-sm);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            margin: 0 auto 12px;
-        }
-
-        .feature-icon-purple {
-            background: rgba(99, 102, 241, 0.12);
-        }
-
-        .feature-icon-cyan {
-            background: rgba(6, 182, 212, 0.12);
-        }
-
-        .feature-icon-green {
-            background: rgba(16, 185, 129, 0.12);
-        }
-
-        .feature-title {
+            padding: 12px 20px;
+            font-family: 'Space Grotesk', sans-serif;
             font-size: 14px;
             font-weight: 600;
-            margin-bottom: 4px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
             letter-spacing: -0.2px;
+            position: relative;
         }
 
-        .feature-desc {
-            font-size: 12px;
-            color: var(--text-muted);
-            line-height: 1.4;
+        .btn-amber {
+            color: var(--surface-0);
+            background: var(--accent);
         }
 
-
-        /* SUPPORTED PLATFORMS */
-
-        .platforms {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 28px;
-            flex-wrap: wrap;
+        .btn-amber:hover {
+            background: var(--accent-hover);
         }
 
-        .platforms-label {
-            font-size: 12px;
-            color: var(--text-muted);
-            font-weight: 500;
+        .btn-teal {
+            color: var(--surface-0);
+            background: var(--green);
         }
 
-        .platform-tag {
-            font-size: 11px;
-            font-weight: 500;
-            padding: 4px 10px;
-            border-radius: 6px;
-            background: rgba(255, 255, 255, 0.04);
-            color: var(--text-secondary);
-            border: 1px solid var(--border-subtle);
+        .btn-teal:hover {
+            background: var(--green-hover);
         }
 
-
-        /* FOOTER */
-
-        .footer {
-            padding: 24px 0;
-            border-top: 1px solid var(--border-subtle);
+        .btn:active {
+            transform: scale(0.985);
         }
 
-        .footer .container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .footer-left {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .footer-logo {
-            width: 20px;
-            height: 20px;
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 9px;
-            color: white;
-        }
-
-        .footer-text {
-            font-size: 13px;
-            color: var(--text-muted);
-        }
-
-        .footer-right {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-
-        .footer-right a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-
-        .footer-right a:hover {
-            color: var(--accent-primary-hover);
-        }
-
-
-        /* LOADING STATE */
-
-        .btn.loading {
+        .btn.busy {
             pointer-events: none;
-            opacity: 0.85;
+            opacity: 0.7;
         }
 
-        .btn.loading .btn-text {
+        .btn.busy .btn-label {
             visibility: hidden;
         }
 
-        .btn.loading .btn-icon {
-            visibility: hidden;
-        }
-
-        .btn.loading::after {
+        .btn.busy::after {
             content: '';
             position: absolute;
-            width: 20px;
-            height: 20px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-top-color: white;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(0,0,0,0.2);
+            border-top-color: var(--surface-0);
             border-radius: 50%;
-            animation: spin 0.7s linear infinite;
+            animation: spin 0.6s linear infinite;
         }
 
         @keyframes spin {
@@ -768,54 +475,147 @@
         }
 
 
-        /* RESPONSIVE */
+        /* ---- DETAILS ROW ---- */
 
-        @media (max-width: 640px) {
+        .details {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: var(--border-1);
+            border: 1px solid var(--border-1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 32px;
+        }
 
-            .hero {
-                padding: 40px 0 30px;
+        .detail {
+            background: var(--surface-1);
+            padding: 20px 16px;
+            text-align: center;
+        }
+
+        .detail-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--text-100);
+            margin-bottom: 4px;
+        }
+
+        .detail-key {
+            font-size: 11px;
+            color: var(--text-300);
+            letter-spacing: 0.3px;
+        }
+
+
+        /* ---- SUPPORTED ---- */
+
+        .supported {
+            margin-top: 28px;
+            text-align: center;
+        }
+
+        .supported-title {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-300);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .supported-list {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .site-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--text-200);
+            background: var(--surface-2);
+            border: 1px solid var(--border-1);
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: border-color 0.15s;
+        }
+
+        .site-tag:hover {
+            border-color: var(--border-2);
+        }
+
+
+        /* ---- FOOTER ---- */
+
+        .foot {
+            margin-top: 56px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .foot-left {
+            font-size: 12px;
+            color: var(--text-300);
+        }
+
+        .foot-right a {
+            font-size: 12px;
+            color: var(--text-300);
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+
+        .foot-right a:hover {
+            color: var(--accent);
+        }
+
+
+        /* ---- RESPONSIVE ---- */
+
+        @media (max-width: 580px) {
+
+            .topbar {
+                padding: 12px 16px;
             }
 
-            .hero-title {
-                font-size: 30px;
-            }
-
-            .hero-subtitle {
-                font-size: 14px;
-            }
-
-            .card {
-                padding: 20px;
-            }
-
-            .options-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .transcript-row {
-                grid-template-columns: 1fr;
-            }
-
-            .features {
-                grid-template-columns: 1fr;
-            }
-
-            .nav-links {
+            .topbar-link {
                 display: none;
             }
 
-            .tabs {
-                flex-direction: column;
+            .layout {
+                padding: 32px 16px 60px;
             }
 
-            .footer .container {
+            .hero h1 {
+                font-size: 26px;
+            }
+
+            .hero-stats {
+                gap: 16px;
+            }
+
+            .hero-stat-num {
+                font-size: 16px;
+            }
+
+            .row-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .details {
+                grid-template-columns: 1fr;
+            }
+
+            .foot {
                 flex-direction: column;
                 gap: 8px;
                 text-align: center;
-            }
-
-            .platforms {
-                justify-content: center;
             }
         }
 
@@ -826,269 +626,231 @@
 
 <body>
 
-    <div class="bg-gradient"></div>
-    <div class="grid-overlay"></div>
+
+    <!-- TOP BAR -->
+
+    <header class="topbar">
+
+        <a href="/" class="brand">
+            <span class="brand-mark">K</span>
+            <span class="brand-name">kstream</span>
+        </a>
+
+        <div class="topbar-right">
+
+            <a href="#features" class="topbar-link">Features</a>
+
+            <a href="https://github.com/Karthigamurugadoss/kstream-downloader"
+               class="gh-btn"
+               target="_blank"
+               rel="noopener noreferrer">
+                <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                Star
+            </a>
+
+        </div>
+
+    </header>
 
 
-    <div class="page-wrapper">
-
-
-        <!-- NAV -->
-
-        <nav class="nav">
-
-            <div class="container">
-
-                <a href="/" class="nav-brand">
-
-                    <div class="nav-logo">K</div>
-
-                    <span class="nav-title">KStream</span>
-
-                    <span class="nav-badge">v2.0</span>
-
-                </a>
-
-                <div class="nav-links">
-
-                    <a href="https://github.com/Karthigamurugadoss/video_downloader"
-                       class="nav-link nav-link-gh"
-                       target="_blank"
-                       rel="noopener noreferrer">
-
-                        <svg viewBox="0 0 16 16">
-                            <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
-                        </svg>
-                        GitHub
-                    </a>
-
-                </div>
-
-            </div>
-
-        </nav>
+    <div class="layout">
 
 
         <!-- HERO -->
 
-        <div class="hero">
+        <section class="hero">
 
-            <div class="container">
+            <span class="hero-tag">open source</span>
 
-                <div class="hero-eyebrow">
-                    <span class="hero-eyebrow-dot"></span>
-                    Open Source &middot; Free Forever
+            <h1>Download anything,<br>from anywhere.</h1>
+
+            <p>
+                Paste a link. Pick a format. Get your file.
+                Videos, audio, transcripts &mdash; from 1000+ sites.
+            </p>
+
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <span class="hero-stat-num">1000+</span>
+                    <span class="hero-stat-label">sites</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="hero-stat-num">5</span>
+                    <span class="hero-stat-label">quality levels</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="hero-stat-num">3x</span>
+                    <span class="hero-stat-label">parallel</span>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- SWITCHER -->
+
+        <div class="switcher">
+            <button class="sw-btn on"
+                    onclick="flip('dl')"
+                    id="sw-dl">
+                Video / Audio
+            </button>
+            <button class="sw-btn"
+                    onclick="flip('tr')"
+                    id="sw-tr">
+                Transcript
+            </button>
+        </div>
+
+
+        <!-- DOWNLOAD PANEL -->
+
+        <div class="panel show" id="p-dl">
+
+            <div class="fcard">
+
+                <div class="fcard-head">
+                    <span class="fcard-title">Download media</span>
+                    <span class="fcard-chip">bulk ready</span>
                 </div>
 
-                <h1 class="hero-title">
-                    <span class="hero-title-gradient">Smart Media Downloader</span>
-                </h1>
+                <form action="/download"
+                      method="POST"
+                      onsubmit="go(this)">
 
-                <p class="hero-subtitle">
-                    Download videos, extract audio, and grab transcripts from your
-                    favorite platforms. Fast, simple, no limits.
-                </p>
+                    <div class="field">
+                        <label class="field-label">URLs</label>
+                        <textarea
+                            name="video_urls"
+                            placeholder="paste one or more URLs, one per line"
+                            required
+                            spellcheck="false"
+                        ></textarea>
+                    </div>
+
+                    <div class="row-2">
+
+                        <div class="field">
+                            <label class="field-label">Format</label>
+                            <select name="mode"
+                                    id="mode"
+                                    onchange="swapQ()">
+                                <option value="video">Video &mdash; MP4</option>
+                                <option value="audio">Audio &mdash; MP3</option>
+                            </select>
+                        </div>
+
+                        <div class="field">
+                            <label class="field-label">Quality</label>
+                            <select name="quality" id="quality">
+                                <option value="best">Best available</option>
+                                <option value="1080">1080p</option>
+                                <option value="720">720p</option>
+                                <option value="480">480p</option>
+                                <option value="360">360p</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <button type="submit" class="btn btn-amber">
+                        <span class="btn-label">Download</span>
+                    </button>
+
+                </form>
 
             </div>
 
         </div>
 
 
-        <!-- MAIN -->
+        <!-- TRANSCRIPT PANEL -->
 
-        <div class="main">
+        <div class="panel" id="p-tr">
 
-            <div class="container">
+            <div class="fcard">
 
-
-                <!-- TABS -->
-
-                <div class="tabs">
-
-                    <button class="tab active"
-                            onclick="switchTab('download')"
-                            id="tab-download">
-                        <span class="tab-icon">&#9655;</span>
-                        Video / Audio
-                    </button>
-
-                    <button class="tab"
-                            onclick="switchTab('transcript')"
-                            id="tab-transcript">
-                        <span class="tab-icon">&#9998;</span>
-                        Transcript
-                    </button>
-
+                <div class="fcard-head">
+                    <span class="fcard-title">Get transcript</span>
+                    <span class="fcard-chip">vtt</span>
                 </div>
 
+                <form action="/transcript"
+                      method="POST"
+                      onsubmit="go(this)">
 
-                <!-- DOWNLOAD PANEL -->
+                    <div class="row-2">
 
-                <div class="tab-panel active" id="panel-download">
-
-                    <div class="card">
-
-                        <div class="card-header">
-
-                            <h2 class="card-title">Download Media</h2>
-
-                            <span class="card-badge">Bulk Ready</span>
-
+                        <div class="field">
+                            <label class="field-label">Video URL</label>
+                            <input type="url"
+                                   name="transcript_url"
+                                   placeholder="paste video url"
+                                   required
+                                   spellcheck="false">
                         </div>
 
-                        <form action="/download"
-                              method="POST"
-                              onsubmit="handleSubmit(this)">
-
-                            <div class="form-group">
-
-                                <label class="form-label">
-                                    Paste URLs (one per line for bulk download)
-                                </label>
-
-                                <textarea
-                                    name="video_urls"
-                                    placeholder="https://youtube.com/watch?v=..."
-                                    required
-                                ></textarea>
-
-                            </div>
-
-                            <div class="options-grid">
-
-                                <div>
-                                    <label class="form-label">Format</label>
-                                    <div class="select-wrapper">
-                                        <select name="mode"
-                                                id="mode"
-                                                onchange="changeQuality()">
-                                            <option value="video">Video (MP4)</option>
-                                            <option value="audio">Audio (MP3)</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <label class="form-label">Quality</label>
-                                    <div class="select-wrapper">
-                                        <select name="quality" id="quality">
-                                            <option value="best">Best Available</option>
-                                            <option value="1080">1080p</option>
-                                            <option value="720">720p</option>
-                                            <option value="480">480p</option>
-                                            <option value="360">360p</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <button type="submit" class="btn btn-primary">
-                                <span class="btn-icon">&#8615;</span>
-                                <span class="btn-text">Download Now</span>
-                            </button>
-
-                        </form>
-
-                    </div>
-
-                </div>
-
-
-                <!-- TRANSCRIPT PANEL -->
-
-                <div class="tab-panel" id="panel-transcript">
-
-                    <div class="card">
-
-                        <div class="card-header">
-
-                            <h2 class="card-title">Download Transcript</h2>
-
-                            <span class="card-badge">VTT Format</span>
-
+                        <div class="field">
+                            <label class="field-label">Language</label>
+                            <select name="language">
+                                <option value="en">English</option>
+                                <option value="ta">Tamil</option>
+                                <option value="hi">Hindi</option>
+                                <option value="te">Telugu</option>
+                                <option value="ml">Malayalam</option>
+                            </select>
                         </div>
 
-                        <form action="/transcript"
-                              method="POST"
-                              onsubmit="handleSubmit(this)">
-
-                            <div class="transcript-row">
-
-                                <div>
-                                    <label class="form-label">Video URL</label>
-                                    <input type="url"
-                                           name="transcript_url"
-                                           placeholder="https://youtube.com/watch?v=..."
-                                           required>
-                                </div>
-
-                                <div>
-                                    <label class="form-label">Language</label>
-                                    <div class="select-wrapper">
-                                        <select name="language">
-                                            <option value="en">English</option>
-                                            <option value="ta">Tamil</option>
-                                            <option value="hi">Hindi</option>
-                                            <option value="te">Telugu</option>
-                                            <option value="ml">Malayalam</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <button type="submit" class="btn btn-green">
-                                <span class="btn-icon">&#9998;</span>
-                                <span class="btn-text">Get Transcript</span>
-                            </button>
-
-                        </form>
-
                     </div>
 
-                </div>
+                    <button type="submit" class="btn btn-teal">
+                        <span class="btn-label">Get transcript</span>
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
 
 
-                <!-- FEATURES -->
+        <!-- FEATURES -->
 
-                <div class="features">
+        <div class="details" id="features">
 
-                    <div class="feature">
-                        <div class="feature-icon feature-icon-purple">&#9889;</div>
-                        <div class="feature-title">Parallel Downloads</div>
-                        <div class="feature-desc">8 concurrent fragments for maximum speed</div>
-                    </div>
+            <div class="detail">
+                <div class="detail-value">8x</div>
+                <div class="detail-key">concurrent fragments</div>
+            </div>
 
-                    <div class="feature">
-                        <div class="feature-icon feature-icon-cyan">&#128230;</div>
-                        <div class="feature-title">Bulk Export</div>
-                        <div class="feature-desc">Multiple URLs delivered as a single ZIP</div>
-                    </div>
+            <div class="detail">
+                <div class="detail-value">ZIP</div>
+                <div class="detail-key">bulk export</div>
+            </div>
 
-                    <div class="feature">
-                        <div class="feature-icon feature-icon-green">&#127925;</div>
-                        <div class="feature-title">Audio Extract</div>
-                        <div class="feature-desc">Extract audio in MP3 up to 320kbps</div>
-                    </div>
+            <div class="detail">
+                <div class="detail-value">320k</div>
+                <div class="detail-key">max audio bitrate</div>
+            </div>
 
-                </div>
+        </div>
 
 
-                <!-- PLATFORMS -->
+        <!-- SUPPORTED SITES -->
 
-                <div class="platforms">
+        <div class="supported">
 
-                    <span class="platforms-label">Works with</span>
-                    <span class="platform-tag">YouTube</span>
-                    <span class="platform-tag">Instagram</span>
-                    <span class="platform-tag">Twitter / X</span>
-                    <span class="platform-tag">Facebook</span>
-                    <span class="platform-tag">1000+ sites</span>
+            <div class="supported-title">Works with</div>
 
-                </div>
-
-
+            <div class="supported-list">
+                <span class="site-tag">youtube</span>
+                <span class="site-tag">instagram</span>
+                <span class="site-tag">twitter/x</span>
+                <span class="site-tag">facebook</span>
+                <span class="site-tag">vimeo</span>
+                <span class="site-tag">tiktok</span>
+                <span class="site-tag">reddit</span>
+                <span class="site-tag">+1000 more</span>
             </div>
 
         </div>
@@ -1096,26 +858,18 @@
 
         <!-- FOOTER -->
 
-        <footer class="footer">
+        <footer class="foot">
 
-            <div class="container">
+            <div class="foot-left">
+                KStream &mdash; only download what you have permission to use.
+            </div>
 
-                <div class="footer-left">
-                    <div class="footer-logo">K</div>
-                    <span class="footer-text">
-                        KStream &mdash; Download content you have permission to use
-                    </span>
-                </div>
-
-                <div class="footer-right">
-                    Built by
-                    <a href="https://github.com/Karthigamurugadoss"
-                       target="_blank"
-                       rel="noopener noreferrer">
-                        Karthigamurugadoss
-                    </a>
-                </div>
-
+            <div class="foot-right">
+                <a href="https://github.com/Karthigamurugadoss"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    @Karthigamurugadoss
+                </a>
             </div>
 
         </footer>
@@ -1126,52 +880,42 @@
 
     <script>
 
-        function switchTab(tab) {
+        function flip(id) {
 
-            document.querySelectorAll('.tab').forEach(
-                function(t) { t.classList.remove('active'); }
+            document.querySelectorAll('.sw-btn').forEach(
+                function(b) { b.classList.remove('on'); }
             );
 
-            document.querySelectorAll('.tab-panel').forEach(
-                function(p) { p.classList.remove('active'); }
+            document.querySelectorAll('.panel').forEach(
+                function(p) { p.classList.remove('show'); }
             );
 
-            document.getElementById('tab-' + tab).classList.add('active');
-            document.getElementById('panel-' + tab).classList.add('active');
+            document.getElementById('sw-' + id).classList.add('on');
+            document.getElementById('p-' + id).classList.add('show');
         }
 
+        function swapQ() {
 
-        function changeQuality() {
+            var m = document.getElementById('mode').value;
+            var q = document.getElementById('quality');
 
-            var mode = document.getElementById('mode').value;
-            var quality = document.getElementById('quality');
-
-            quality.innerHTML = '';
-
-            if (mode === 'video') {
-
-                quality.innerHTML =
-                    '<option value="best">Best Available</option>' +
+            if (m === 'video') {
+                q.innerHTML =
+                    '<option value="best">Best available</option>' +
                     '<option value="1080">1080p</option>' +
                     '<option value="720">720p</option>' +
                     '<option value="480">480p</option>' +
                     '<option value="360">360p</option>';
-
             } else {
-
-                quality.innerHTML =
+                q.innerHTML =
                     '<option value="320">320 kbps</option>' +
                     '<option value="192">192 kbps</option>' +
                     '<option value="128">128 kbps</option>';
-
             }
         }
 
-
-        function handleSubmit(form) {
-
-            var btn = form.querySelector('.btn');
-            btn.classList.add('loading');
+        function go(f) {
+            f.querySelector('.btn').classList.add('busy');
         }
 
     </script>
