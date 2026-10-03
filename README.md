@@ -19,9 +19,9 @@
 <p align="center">
   <a href="https://karthigamurugadoss.github.io/kstream-downloader/">Website</a> &nbsp;&middot;&nbsp;
   <a href="#features">Features</a> &nbsp;&middot;&nbsp;
+  <a href="#kspotify--spotify-downloader">KSpotify</a> &nbsp;&middot;&nbsp;
   <a href="#getting-started">Getting Started</a> &nbsp;&middot;&nbsp;
   <a href="#usage">Usage</a> &nbsp;&middot;&nbsp;
-  <a href="#supported-platforms">Platforms</a> &nbsp;&middot;&nbsp;
   <a href="#contributing">Contributing</a>
 </p>
 
@@ -159,7 +159,35 @@ Open your browser and go to **http://127.0.0.1:5000**
 
 ## KSpotify — Spotify Downloader
 
-This repo also includes **KSpotify**, a Spotify song and playlist downloader with the same design language.
+<p align="center">
+  <img src="spotify/screenshots/banner.svg" alt="KSpotify — Spotify Song & Playlist Downloader" width="100%">
+</p>
+
+<p align="center">
+  <strong>Download Spotify songs, playlists, and albums as high-quality audio files.</strong><br>
+  Built with Python Flask and spotdl. Same design language as KStream.
+</p>
+
+<p align="center">
+  <a href="https://python.org"><img src="https://img.shields.io/badge/Python-3.8%2B-3776AB?logo=python&logoColor=white" alt="Python"></a>
+  <a href="https://flask.palletsprojects.com"><img src="https://img.shields.io/badge/Flask-Web_Framework-000000?logo=flask&logoColor=white" alt="Flask"></a>
+  <a href="https://github.com/spotDL/spotify-downloader"><img src="https://img.shields.io/badge/spotdl-Spotify_Engine-1DB954?logo=spotify&logoColor=white" alt="spotdl"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License"></a>
+</p>
+
+### Screenshots
+
+| Song / Track Download | Playlist / Album Download |
+|:---:|:---:|
+| ![Song Download](spotify/screenshots/kspotify-hero.jpg) | ![Playlist Download](spotify/screenshots/kspotify-playlist.jpg) |
+
+<details>
+<summary><strong>Mobile View</strong></summary>
+<br>
+<p align="center">
+  <img src="spotify/screenshots/kspotify-mobile.jpg" alt="KSpotify - Mobile View" width="300">
+</p>
+</details>
 
 ### Features
 
@@ -170,11 +198,25 @@ This repo also includes **KSpotify**, a Spotify song and playlist downloader wit
 - Live link preview with track metadata
 - Automatic album art and metadata embedding
 
+### Tech Stack
+
+| Component | Technology |
+|-----------|------------|
+| Backend | Python, Flask |
+| Frontend | HTML5, CSS3, JavaScript |
+| Music Engine | spotdl |
+| Audio Source | YouTube (via yt-dlp) |
+| Metadata | Spotify API |
+
 ### Run KSpotify
 
 ```bash
 cd spotify
+
+# Install dependencies
 pip install -r ../requirements.txt
+
+# Run the application
 python app.py
 ```
 
@@ -186,7 +228,7 @@ Open your browser and go to **http://127.0.0.1:5100**
 2. Choose your preferred audio format and quality
 3. Click **Download** — single tracks download directly, playlists arrive as a ZIP
 
-> KSpotify uses [spotdl](https://github.com/spotDL/spotify-downloader) under the hood, which finds matching audio on YouTube and downloads it with proper Spotify metadata.
+> KSpotify uses [spotdl](https://github.com/spotDL/spotify-downloader) under the hood, which finds matching audio on YouTube and downloads it with proper Spotify metadata, album art, and lyrics.
 
 ---
 
@@ -194,16 +236,17 @@ Open your browser and go to **http://127.0.0.1:5100**
 
 ```
 kstream-downloader/
-├── app.py              # Flask backend — video/audio/transcript routes
+├── app.py                  # Flask backend — video/audio/transcript routes
 ├── templates/
-│   └── index.html      # KStream frontend UI
+│   └── index.html          # KStream frontend UI
 ├── spotify/
-│   ├── app.py          # Flask backend — Spotify download routes
-│   └── templates/
-│       └── index.html  # KSpotify frontend UI
-├── screenshots/        # App screenshots
-├── requirements.txt    # Python dependencies (Flask, yt-dlp, spotdl)
-├── downloads/          # Temporary download directory (auto-created)
+│   ├── app.py              # Flask backend — Spotify download routes
+│   ├── templates/
+│   │   └── index.html      # KSpotify frontend UI
+│   └── screenshots/        # KSpotify app screenshots
+├── screenshots/            # KStream app screenshots
+├── requirements.txt        # Python dependencies (Flask, yt-dlp, spotdl)
+├── downloads/              # Temporary download directory (auto-created)
 ├── LICENSE
 └── README.md
 ```
@@ -221,7 +264,7 @@ YouTube, Instagram, Twitter/X, Facebook, Vimeo, Dailymotion, SoundCloud, TikTok,
 ## Roadmap
 
 - [ ] Download progress bar in the UI
-- [ ] Playlist support
+- [x] Spotify song & playlist downloader (KSpotify)
 - [ ] Docker container for one-command deployment
 - [ ] Dark/light theme toggle
 - [ ] Download history
